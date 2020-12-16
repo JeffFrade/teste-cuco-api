@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Helpers\StringHelper;
 use App\Repositories\ClientRepository;
 
 class Client
@@ -39,8 +40,11 @@ class Client
      * @param array $params
      * @return mixed
      */
-    public function index(array $params)
+    public function index(array $params = [])
     {
-        return $this->getClientRepository()->allNoTrashed();
+        $name = $params['name'] ?? '';
+        $document = StringHelper::formatDocument($params['document'] ?? '');
+
+        return $this->getClientRepository()->getClients($name, $document);
     }
 }
