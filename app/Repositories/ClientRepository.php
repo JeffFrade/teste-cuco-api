@@ -30,4 +30,9 @@ class ClientRepository extends AbstractRepository
     {
         return new Client();
     }
+
+    public function getClients()
+    {
+
+    }
 }

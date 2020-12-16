@@ -14,4 +14,13 @@ class StringHelper
     {
         return preg_replace($regex, $replace, $text);
     }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public static function mountLikeCriteria(string $text)
+    {
+        return '%' . $text . '%';
+    }
 }

@@ -35,6 +35,10 @@ class Client
         return new ClientRepository();
     }
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function index(array $params)
     {
         return $this->getClientRepository()->allNoTrashed();

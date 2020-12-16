@@ -26,6 +26,7 @@ class ClientFactory extends Factory
 
         return [
             'name' => $this->faker->name,
+            'document' => StringHelper::replaceRegex($this->faker->cpf, '/\.+|\-+/i', ''),
             'birth_date' => $this->faker->date(),
             'phone' => (rand(0, 1) ? null : $phone)
         ];
