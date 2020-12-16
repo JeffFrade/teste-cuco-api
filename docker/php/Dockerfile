@@ -23,7 +23,8 @@ RUN docker-php-ext-install \
         pdo \
         imap \
         gd \
-        mysqli
+        mysqli \
+        pdo_mysql
 RUN useradd -m cuco
 USER cuco
 WORKDIR /cuco-api
