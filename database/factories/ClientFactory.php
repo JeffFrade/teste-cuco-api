@@ -22,11 +22,11 @@ class ClientFactory extends Factory
      */
     public function definition()
     {
-        $phone = StringHelper::replaceRegex($this->faker->phoneNumber, '/\(+|\)+|\s|\-+/i', '');
+        $phone = StringHelper::formatPhone($this->faker->phoneNumber);
 
         return [
             'name' => $this->faker->name,
-            'document' => StringHelper::replaceRegex($this->faker->cpf, '/\.+|\-+/i', ''),
+            'document' => StringHelper::formatDocument($this->faker->cpf),
             'birth_date' => $this->faker->date(),
             'phone' => (rand(0, 1) ? null : $phone)
         ];
