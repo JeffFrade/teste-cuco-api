@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Helpers\StringHelper;
 use App\Repositories\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,10 +22,12 @@ class ClientFactory extends Factory
      */
     public function definition()
     {
+        $phone = StringHelper::replaceRegex($this->faker->phoneNumber, '/\(+|\)+|\s|\-+/i', '');
+
         return [
             'name' => $this->faker->name,
             'birth_date' => $this->faker->date(),
-            'phone' => (rand(0, 1) ? null : $this->faker->phoneNumber)
+            'phone' => (rand(0, 1) ? null : $phone)
         ];
     }
 }
