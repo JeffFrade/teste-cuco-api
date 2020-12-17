@@ -62,6 +62,7 @@ class Client
     public function delete(int $id)
     {
         $this->verifyIfExistsClient($id);
+        $this->getClientRepository()->delete($id);
     }
 
     /**

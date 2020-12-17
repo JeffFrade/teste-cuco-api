@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Core\Exceptions\ClientEmptyResultDataException;
+use App\Core\Exceptions\ClientNonexistentIdException;
 use App\Core\Support\Controller;
 use App\Service\Client;
 use Illuminate\Http\JsonResponse;
@@ -40,8 +41,18 @@ class ClientController extends Controller
         }
     }
 
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
     public function delete(int $id)
     {
+        try {
+            $this->client->delete($id);
 
+            return $this->successResponse(sprintf(trans('exceptions.client-success-delete'), $id));
+        } catch (ClientNonexistentIdException $e) {
+            return $this->errorResponse($e->getMessage(), 0, Response::HTTP_BAD_REQUEST);
+        }
     }
 }

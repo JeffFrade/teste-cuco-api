@@ -16,6 +16,6 @@ class ClientNonexistentIdException extends BaseException implements ClientExcept
      */
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
-        parent::__construct(sprintf(trans('exceptions.client-nonexistent-id', $message)), $code, $previous);
+        parent::__construct(sprintf(trans('exceptions.client-nonexistent-id'), $message), $code, $previous);
     }
 }
