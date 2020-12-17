@@ -67,8 +67,6 @@ class Client
         $params['phone'] = StringHelper::formatPhone($params['phone' ?? '']);
         $params['birth_date'] = DateHelper::formatDate($params['birth_date'] ?? '');
 
-        dd($params);
-
         return $this->getClientRepository()->create($params);
     }
 
