@@ -95,6 +95,4 @@ class ClientController extends Controller
 
         return $validation;
     }
-
-
 }
