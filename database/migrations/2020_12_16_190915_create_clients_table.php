@@ -16,6 +16,7 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
+            $table->string('document', 11);
             $table->date('birth_date');
             $table->string('phone', 11)->nullable();
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Core\Support\AbstractRepository;
+use App\Helpers\StringHelper;
 use App\Repositories\Models\Client;
 
 class ClientRepository extends AbstractRepository
@@ -29,5 +30,30 @@ class ClientRepository extends AbstractRepository
     private function createDefaultClient()
     {
         return new Client();
+    }
+
+    /**
+     * @param string $name
+     * @param string $document
+     * @return mixed
+     */
+    public function getClients(string $name = '', string $document = '')
+    {
+        $model = $this->model->where('name', 'like', StringHelper::mountLikeCriteria($name));
+
+        if (!empty($document)) {
+            $model = $model->orWhere('document', 'like', StringHelper::mountLikeCriteria($document));
+        }
+
+        return $model->get();
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function exists(int $id)
+    {
+        return $this->model->where('id', $id)->count();
     }
 }
