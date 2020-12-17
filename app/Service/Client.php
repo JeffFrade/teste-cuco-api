@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Core\Exceptions\ClientEmptyResultDataException;
+use App\Core\Exceptions\ClientInvalidArgumentException;
 use App\Core\Exceptions\ClientNonexistentIdException;
+use App\Helpers\DateHelper;
 use App\Helpers\StringHelper;
 use App\Repositories\ClientRepository;
 
@@ -56,6 +58,21 @@ class Client
     }
 
     /**
+     * @param array $params
+     * @return mixed
+     */
+    public function store(array $params)
+    {
+        $params['document'] = StringHelper::formatDocument($params['document'] ?? '');
+        $params['phone'] = StringHelper::formatPhone($params['phone' ?? '']);
+        $params['birth_date'] = DateHelper::formatDate($params['birth_date'] ?? '');
+
+        dd($params);
+
+        return $this->getClientRepository()->create($params);
+    }
+
+    /**
      * @param int $id
      * @throws ClientNonexistentIdException
      */
@@ -84,6 +101,28 @@ class Client
     {
         if ($this->getClientRepository()->exists($id) <= 0) {
             throw new ClientNonexistentIdException($id);
+        }
+    }
+
+    /**
+     * @param array $validation
+     * @throws ClientInvalidArgumentException
+     */
+    public function verifyIfEmptyParamsOnValidation(array $validation)
+    {
+        if (empty($validation) === true) {
+            throw new ClientInvalidArgumentException(trans('exceptions.empty-params'));
+        }
+    }
+
+    /**
+     * @param array $validation
+     * @throws ClientInvalidArgumentException
+     */
+    public function verifyErrorMessageOnValidation(array $validation)
+    {
+        if (empty($validation['error']) === false) {
+            throw new ClientInvalidArgumentException($validation['error']);
         }
     }
 }

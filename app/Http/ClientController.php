@@ -3,12 +3,14 @@
 namespace App\Http;
 
 use App\Core\Exceptions\ClientEmptyResultDataException;
+use App\Core\Exceptions\ClientInvalidArgumentException;
 use App\Core\Exceptions\ClientNonexistentIdException;
 use App\Core\Support\Controller;
 use App\Service\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -42,6 +44,23 @@ class ClientController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function store(Request $request)
+    {
+        try {
+            $params = $this->toValidate($request);
+            $data = $this->client->store($params);
+
+            return $this->successResponse($data);
+        } catch (ClientInvalidArgumentException $e) {
+            return $this->errorResponse($e->getMessage(), 0, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */
@@ -55,4 +74,27 @@ class ClientController extends Controller
             return $this->errorResponse($e->getMessage(), 0, Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws ClientInvalidArgumentException
+     * @throws ValidationException
+     */
+    private function toValidate(Request $request)
+    {
+        $validation = $this->validate($request, [
+            'name' => 'required|max:150',
+            'document' => 'required|max:14',
+            'birth_date' => 'required|max:10',
+            'phone' => 'nullable|max:15',
+        ]);
+
+        $this->client->verifyIfEmptyParamsOnValidation($validation);
+        $this->client->verifyErrorMessageOnValidation($validation);
+
+        return $validation;
+    }
+
+
 }
