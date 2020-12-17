@@ -39,10 +39,14 @@ class ClientRepository extends AbstractRepository
      */
     public function getClients(string $name = '', string $document = '')
     {
-        $model = $this->model->where('name', 'like', StringHelper::mountLikeCriteria($name));
+        $model = $this->model;
+
+        if (!empty($name)) {
+            $model = $model->where('name', 'like', StringHelper::mountLikeCriteria($name));
+        }
 
         if (!empty($document)) {
-            $model = $model->orWhere('document', 'like', StringHelper::mountLikeCriteria($document));
+            $model = $model->where('document', 'like', StringHelper::mountLikeCriteria($document));
         }
 
         return $model->get();
