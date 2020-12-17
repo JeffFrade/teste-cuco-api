@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Core\Exceptions\ClientEmptyResultDataException;
+use App\Core\Exceptions\ClientNonexistentIdException;
 use App\Helpers\StringHelper;
 use App\Repositories\ClientRepository;
 
@@ -39,12 +41,48 @@ class Client
     /**
      * @param array $params
      * @return mixed
+     * @throws ClientEmptyResultDataException
      */
     public function index(array $params = [])
     {
         $name = $params['name'] ?? '';
         $document = StringHelper::formatDocument($params['document'] ?? '');
 
-        return $this->getClientRepository()->getClients($name, $document);
+        $data = $this->getClientRepository()->getClients($name, $document);
+
+        $this->verifyIfResultDataIsEmpty($data);
+
+        return $data;
+    }
+
+    /**
+     * @param int $id
+     * @throws ClientNonexistentIdException
+     */
+    public function delete(int $id)
+    {
+        $this->verifyIfExistsClient($id);
+    }
+
+    /**
+     * @param $data
+     * @throws ClientEmptyResultDataException
+     */
+    private function verifyIfResultDataIsEmpty($data)
+    {
+        if (count($data) <= 0) {
+            throw new ClientEmptyResultDataException('A Pesquisa Não Obteve Nenhum Resultado');
+        }
+    }
+
+    /**
+     * @param int $id
+     * @throws ClientNonexistentIdException
+     */
+    private function verifyIfExistsClient(int $id)
+    {
+        if ($this->getClientRepository()->exists($id) <= 0) {
+            throw new ClientNonexistentIdException($id);
+        }
     }
 }

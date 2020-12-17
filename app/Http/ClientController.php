@@ -2,10 +2,12 @@
 
 namespace App\Http;
 
+use App\Core\Exceptions\ClientEmptyResultDataException;
 use App\Core\Support\Controller;
 use App\Service\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ClientController extends Controller
 {
@@ -29,12 +31,17 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-         $data = $this->client->index($request->all() ?? []);
-         $response = [
-             'code' => 1,
-             'data' => $data
-         ];
+        try {
+            $data = $this->client->index($request->all() ?? []);
 
-         return response()->json($response);
+            return $this->successResponse($data);
+        } catch (ClientEmptyResultDataException $e) {
+            return $this->errorResponse($e->getMessage(), 0, Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function delete(int $id)
+    {
+
     }
 }

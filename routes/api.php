@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'clients'], function () {
     Route::get('/', 'ClientController@index')->name('clients.index');
+    Route::delete('/delete/{id}', 'ClientController@delete')->name('clients.delete');
 });

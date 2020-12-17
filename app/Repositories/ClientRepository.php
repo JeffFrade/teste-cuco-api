@@ -47,4 +47,13 @@ class ClientRepository extends AbstractRepository
 
         return $model->get();
     }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function exists(int $id)
+    {
+        return $this->model->where('id', $id)->count();
+    }
 }
